@@ -1,4 +1,5 @@
 import streamlit as st
+from PIL import Image
 from database_functions import (
     check_user_credentials,
     insert_user,
@@ -61,7 +62,12 @@ def home_page():
     user_id = st.session_state.user_id
 
     for image_id in range(1, 4):
-        st.image(f"images/sample_image_{image_id}.jpg", caption=f"Image {image_id}")
+        image_path = f"images/sample_image_{image_id}.jpg"
+        image = Image.open(image_path)
+        width, height = image.size
+        new_size = (int(width * 0.8), int(height * 0.8))  # Reduce size by 20%
+        resized_image = image.resize(new_size)
+        st.image(resized_image, caption=f"Image {image_id}")
 
         like_action = st.button(f"Like ❤️", key=f"like_{image_id}")
         if like_action:

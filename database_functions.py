@@ -42,16 +42,13 @@ def like_image(user_id, image_id):
         return "already_liked"
 
     # Insert like into the database
-    query = "INSERT INTO likes (user_id, image_id, username) VALUES (%s, %s, %s)"
-    execute_query(query, (user_id, image_id, username))
+    query = "INSERT INTO likes (user_id, image_id, username, like_count) VALUES (%s, %s, %s, %s)"
+    execute_query(query, (user_id, image_id, username, 1))
 
-    # Update like count
-    query = "UPDATE likes SET like_count = like_count + 1 WHERE image_id = %s"
-    execute_query(query, (image_id,))
     return "liked"
 
 def get_like_count(image_id):
-    query = "SELECT SUM(like_count) AS like_count FROM likes WHERE image_id = %s"
+    query = "SELECT COUNT(*) AS like_count FROM likes WHERE image_id = %s"
     result = execute_query(query, (image_id,), fetch=True)
     if result:
         return result[0]['like_count'] or 0
